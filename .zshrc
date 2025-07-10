@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -70,7 +77,7 @@ ZSH_THEME="robbyrussell"
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-syntax-highlighting zsh-autosuggestions fzf-zsh-plugin)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -102,4 +109,36 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+alias gg="ghq get"
+
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+
+setopt SHARE_HISTORY
+
+custom_fzf(){
+	local dir=$(ghq list -p | fzf --query="$LBUFFER") 
+	if [ -n "$dir" ]; then
+		BUFFER="cd ${dir}"
+		
+		zle accept-line && zle -R && zle .reset-prompt
+	fi
+}
+zle -N custom_fzf 
+bindkey '^f' custom_fzf
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 eval "$(starship init zsh)"
+alias ss1="export STARSHIP_CONFIG=~/.config/starship.toml"
+alias ss2="export STARSHIP_CONFIG=~/.config/starship2.toml"
+
+# fnm
+FNM_PATH="/home/rico/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/rico/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
+
+if [ -e /home/rico/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rico/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
