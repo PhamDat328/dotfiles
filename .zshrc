@@ -110,6 +110,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias gg="ghq get"
+alias os="nvim .zshrc"
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -142,3 +143,5 @@ if [ -d "$FNM_PATH" ]; then
 fi
 
 if [ -e /home/rico/.nix-profile/etc/profile.d/nix.sh ]; then . /home/rico/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
